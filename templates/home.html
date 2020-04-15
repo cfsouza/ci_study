@@ -6,10 +6,14 @@
 </head>
 <body>
     <h1>Lista de atividades</h1>
+    {% if object_list %}
     <ul>
         {% for post in object_list %}
             <li>{{ post }}</li>
         {% endfor %}
     </ul>
+    {% else %}
+        <li>Nenhuma ainda.</li>
+    {% endif %}
 </body>
 </html>
