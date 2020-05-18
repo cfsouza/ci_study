@@ -9,26 +9,27 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
 import os
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+root = environ.Path(__file__) - 3  # get root of the project
+env = environ.Env(DEBUG=(bool, False),)  # set default values and casting
+environ.Env.read_env()  # reading .env file
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+SITE_ROOT = root()
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'j9cx%u50k)-$s)5!byd4sw02^nhwda1j177i7g+j)eq9a8i&ax'
+SECRET_KEY = env('SECRET_KEY')  # Raises ImproperlyConfigured exception if SECRET_KEY not in os.environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')  # False if not in os.environ
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = eval(env('ALLOWED_HOSTS'))
 
 
 # Application definition
+APPS_DIR = root.path('droneci_test')  # path for django apps
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -51,12 +52,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'droneci_test.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(SITE_ROOT, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,22 +69,14 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'droneci_test.wsgi.application'
-
+print(TEMPLATES)
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'admin123',
-        'HOST': 'db',
-        'PORT': 5432,
-    }
+    'default': env.db(), # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
+    'extra': env.db('SQLITE_URL', default='sqlite:////tmp/my-tmp-sqlite.db')
 }
 
 # Password validation

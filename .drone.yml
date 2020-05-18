@@ -6,7 +6,7 @@ steps:
   - name: build-test-image
     image: python:3-alpine
     commands:
-      - pip install -r requirements.txt
+      - pip install -r requirements/local.txt
       - python manage.py makemigrations posts
       - python manage.py migrate posts
       - python manage.py createinitialrevisions
@@ -18,7 +18,7 @@ steps:
 #  - name: build-production-image
 #    image: python:3-alpine
 #    commands:
-#      - pip install -r requirements.txt
+#      - pip install -r base.txt
 #      - python manage.py makemigrations posts
 #      - python manage.py migrate posts
 #      - python manage.py createinitialrevisions

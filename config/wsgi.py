@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'droneci_test.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'droneci_test.config.settings.dev')
 
 application = get_wsgi_application()

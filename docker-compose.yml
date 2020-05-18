@@ -5,10 +5,12 @@ services:
     image: postgres
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_PASSWORD: admin123
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    env_file:
+      - config/settings/.env
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
